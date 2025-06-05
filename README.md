@@ -17,8 +17,6 @@ Projeto simples de agenda desenvolvido em Java com persistência de dados em ban
 - Exclusão de tarefas
 - Conexão com banco de dados via JDBC
 
-  ![image](https://github.com/user-attachments/assets/e5d5dbcc-5e73-43a5-ba24-3a133a23d06f)
-
 
 ## 📂 Estrutura do Projeto
 
