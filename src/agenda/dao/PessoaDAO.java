@@ -13,9 +13,6 @@ public class PessoaDAO {
 
 	public boolean salvar(Pessoa pessoa) {
 
-		/*
-		 * Isso é um sql comum, onde os ? são os paramentros na base de dados
-		 */
 
 		String sql = "INSERT INTO `pessoa`(`Nome`, `Endereco`, `Cidade`, `CEP`)" + " VALUES (?, ?, ?, ?)";
 
@@ -70,12 +67,12 @@ public class PessoaDAO {
 		try (Connection conn = Conexao.createConnectionToMySQL(); PreparedStatement pstm = conn.prepareStatement(sql)) {
 
 			pstm.setInt(1, termo);
-			int rowsAffected = pstm.executeUpdate(); // Cria uma variavel para capturar com o pstm quantas linhas
-														// mudaram.
-			return rowsAffected > 0; // Retorna true se conseguir apagar (se linhas foram mudadas).
+			int rowsAffected = pstm.executeUpdate(); 
+			
+			return rowsAffected > 0; 
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false; // Se não conseguir apagar, retorna falso
+			return false; 
 		}
 	}
 }
