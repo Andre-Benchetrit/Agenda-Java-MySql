@@ -1,0 +1,162 @@
+package agenda.view;
+
+import agenda.controller.TarefaController;
+import agenda.controller.PessoaController;
+import agenda.model.Pessoa;
+import agenda.model.Tarefa;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
+import javax.swing.*;
+import java.util.List;
+
+public class TarefaView {
+	private TarefaController tarefaController = new TarefaController();
+	private PessoaController pessoaController = new PessoaController();
+
+	public void menu() {
+		boolean executando = true;
+		while (executando) {
+			String[] op1 = { "Nova Tarefa", "Procurar Tarefa", "Apagar Tarefa", "Voltar ao menu" };
+			int escolha = JOptionPane.showOptionDialog(null, "Ações na área de tarefas", "Agenda :D",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, op1, op1[0]);
+
+			switch (escolha) {
+			case 0 -> adicionarTarefa();
+			case 1 -> listarTarefa();
+			case 2 -> excluirTarefa();
+			case 3, -1 -> executando = false;
+			}
+		}
+	}
+
+	private void adicionarTarefa() {
+		String nomeTarefa = JOptionPane.showInputDialog("Qual é a nova tarefa?");
+		if (nomeTarefa == null || nomeTarefa.trim().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Nome da tarefa não pode ser vazio.");
+			return;
+		}
+
+		// Data
+		LocalDate dataEntrega;
+		String input = JOptionPane.showInputDialog("Para quando a nova tarefa deverá ser feita? (Formato yyyy-MM-dd)");
+		try {
+			dataEntrega = LocalDate.parse(input);
+		} catch (DateTimeParseException e) {
+			JOptionPane.showMessageDialog(null, "Data inválida! Use o formato yyyy-MM-dd.");
+			return;
+		}
+
+		// Pessoa
+		Pessoa pessoaEscolhida;
+		String nomePessoa = JOptionPane.showInputDialog("Digite o nome do encarregado da tarefa:");
+		List<Pessoa> pessoas = pessoaController.buscarPessoa("Nome", nomePessoa);
+
+		if (pessoas.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Pessoa não encontrada.");
+			return;
+		}
+
+		if (pessoas.size() == 1) {
+			pessoaEscolhida = pessoas.get(0);
+		} else {
+			String[] nomes = pessoas.stream().map(p -> p.getIdPessoa() + " - " + p.getNome()).toArray(String[]::new);
+
+			String escolha = (String) JOptionPane.showInputDialog(null, "Mais de uma pessoa encontrada. Escolha:",
+					"Selecionar Pessoa", JOptionPane.PLAIN_MESSAGE, null, nomes, nomes[0]);
+
+			if (escolha == null) {
+				JOptionPane.showMessageDialog(null, "Nenhuma pessoa selecionada.");
+				return;
+			}
+
+			int idEscolhido = Integer.parseInt(escolha.split(" - ")[0]);
+			pessoaEscolhida = pessoas.stream().filter(p -> p.getIdPessoa() == idEscolhido).findFirst().orElse(null);
+
+			if (pessoaEscolhida == null) {
+				JOptionPane.showMessageDialog(null, "Erro ao selecionar a pessoa.");
+				return;
+			}
+		}
+
+		// Cria a tarefa e envia pro controller
+		Tarefa tarefa = new Tarefa(nomeTarefa, dataEntrega, pessoaEscolhida);
+
+		boolean sucesso = tarefaController.adicionarTarefa(tarefa);
+
+		if (sucesso) {
+			JOptionPane.showMessageDialog(null, "Tarefa adicionada com sucesso!");
+		} else {
+			JOptionPane.showMessageDialog(null, "Erro ao adicionar tarefa.", "Erro", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void listarTarefa() {
+		String[] opcoes = { "Nome da Tarefa", "Data de Entrega", "Nome do Encarregado" };
+		int escolha = JOptionPane.showOptionDialog(null, "Escolha o critério de busca:", "Buscar Tarefa",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, opcoes, opcoes[0]);
+
+		if (escolha == JOptionPane.CLOSED_OPTION)
+			return;
+
+		String campo;
+		String termo = null;
+
+		switch (escolha) {
+		case 0:
+			campo = "nomeTarefa";
+			termo = JOptionPane.showInputDialog("Digite o nome da tarefa:");
+			break;
+		case 1:
+			campo = "dataEntrega";
+			termo = JOptionPane.showInputDialog("Digite a data de entrega (yyyy-mm-dd):");
+			break;
+		case 2:
+			campo = "p.Nome"; // Precisa ser alias da tabela pessoa no SQL do DAO
+			termo = JOptionPane.showInputDialog("Digite o nome do encarregado:");
+			break;
+		default:
+			return;
+		}
+
+		if (termo == null || termo.trim().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Termo de busca não pode ser vazio.");
+			return;
+		}
+
+		List<Tarefa> tarefas = tarefaController.buscarTarefa(campo, termo);
+
+		if (tarefas.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Nenhuma tarefa encontrada.");
+		} else {
+			StringBuilder sb = new StringBuilder("Tarefas encontradas:\n\n");
+			for (Tarefa t : tarefas) {
+				sb.append("ID: ").append(t.getIdTarefa()).append("\n").append("Tarefa: ").append(t.getNomeTarefa())
+						.append("\n").append("Entrega: ").append(t.getDataEntrega()).append("\n").append("Pessoa: ")
+						.append(t.getPessoa().getNome()).append("\n\n");
+			}
+			JOptionPane.showMessageDialog(null, sb.toString());
+		}
+	}
+
+	private void excluirTarefa() {
+		String idStr = JOptionPane.showInputDialog("Digite o ID da tarefa que deseja excluir:");
+		if (idStr == null || idStr.trim().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "ID não pode ser vazio.");
+			return;
+		}
+
+		try {
+			int idTarefa = Integer.parseInt(idStr);
+			boolean sucesso = tarefaController.apagarTarefa(idTarefa);
+			if (sucesso) {
+				JOptionPane.showMessageDialog(null, "Tarefa excluída com sucesso.");
+			} else {
+				JOptionPane.showMessageDialog(null, "Tarefa não encontrada.");
+			}
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "ID inválido.");
+		}
+	}
+
+}
