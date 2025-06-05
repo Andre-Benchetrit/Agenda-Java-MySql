@@ -57,6 +57,6 @@ Este projeto faz parte do meu processo de aprendizado em Java. A ideia é evolui
 ## 📫 Contato
 Estou aberto para comissões e contratação. Se quiser trocar ideia, feedback ou sugestão:
 
-[LinkedIn](https://www.linkedin.com/in/andré-benchetrit-8aa9ba183/)
+[LinkedIn](https://www.linkedin.com/in/andr%C3%A9-benchetrit-8aa9ba183)
 
 andrebenchetrit@hotmail.com
