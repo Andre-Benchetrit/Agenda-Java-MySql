@@ -77,12 +77,12 @@ public class TarefaDAO {
 		try (Connection conn = Conexao.createConnectionToMySQL(); PreparedStatement pstm = conn.prepareStatement(sql)) {
 
 			pstm.setInt(1, termo);
-			int rowsAffected = pstm.executeUpdate(); // Cria uma variavel para capturar com o pstm quantas linhas
-														// mudaram.
-			return rowsAffected > 0; // Retorna true se conseguir apagar (se linhas foram mudadas).
+			int rowsAffected = pstm.executeUpdate(); 
+														
+			return rowsAffected > 0; 
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false; // Se não conseguir apagar, retorna falso
+			return false; 
 		}
 	}
 
