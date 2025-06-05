@@ -53,3 +53,9 @@ Projeto simples de agenda desenvolvido em Java com persistência de dados em ban
 
 ## 🙋‍♂️ Objetivo
 Este projeto faz parte do meu processo de aprendizado em Java. A ideia é evoluir ele com novos recursos, e ao mesmo tempo registrar minha evolução como desenvolvedor.
+
+## 📫 Contato
+Estou aberto para comissões e contratação. Se quiser trocar ideia, feedback ou sugestão:
+
+[LinkedIn](https://www.linkedin.com/in/andré-benchetrit-8aa9ba183/)
+andrebenchetrit@hotmail.com
