@@ -2,6 +2,9 @@
 
 Projeto simples de agenda desenvolvido em Java com persistência de dados em banco MySQL. Criado com foco em aprendizado de programação orientada a objetos, manipulação de banco de dados e estrutura MVC.
 
+![image](https://github.com/user-attachments/assets/a2bdf304-e19c-442e-b102-6b3a9b62f998)
+
+
 ## 📌 Funcionalidades Atuais
 
 - Cadastro de pessoas
@@ -13,6 +16,9 @@ Projeto simples de agenda desenvolvido em Java com persistência de dados em ban
 - Listagem geral de tarefas e pessoas
 - Exclusão de tarefas
 - Conexão com banco de dados via JDBC
+
+  ![image](https://github.com/user-attachments/assets/e5d5dbcc-5e73-43a5-ba24-3a133a23d06f)
+
 
 ## 📂 Estrutura do Projeto
 
