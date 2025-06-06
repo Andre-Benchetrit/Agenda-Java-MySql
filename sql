@@ -1,17 +1,22 @@
--- Criação do banco de dados
-CREATE DATABASE IF NOT EXISTS agenda;
+-- Criar o banco
+DROP DATABASE IF EXISTS agenda;
+CREATE DATABASE agenda;
 USE agenda;
 
 -- Tabela de Pessoa
-CREATE TABLE IF NOT EXISTS pessoa (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL
+CREATE TABLE pessoa (
+    idPessoa INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(45) NOT NULL,
+    Endereco VARCHAR(45),
+    Cidade VARCHAR(45),
+    CEP VARCHAR(45)
 );
 
 -- Tabela de Tarefa
-CREATE TABLE IF NOT EXISTS tarefa (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    dataEntrega DATE NOT NULL,
-    idPessoa INT,
-    FOREIGN KEY (idPessoa) REFERENCES pessoa(id)
+CREATE TABLE tarefa (
+    idTarefa INT AUTO_INCREMENT PRIMARY KEY,
+    nomeTarefa VARCHAR(45) NOT NULL,
+    dataEntrega DATE,
+    Pessoa_idPessoa INT,
+    FOREIGN KEY (Pessoa_idPessoa) REFERENCES pessoa(idPessoa)
+);
