@@ -4,6 +4,8 @@ import agenda.controller.TarefaController;
 import agenda.controller.PessoaController;
 import agenda.model.Pessoa;
 import agenda.model.Tarefa;
+
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
@@ -11,13 +13,14 @@ import javax.swing.*;
 import java.util.List;
 
 public class TarefaView {
+
 	private TarefaController tarefaController = new TarefaController();
 	private PessoaController pessoaController = new PessoaController();
 
 	public void menu() {
 		boolean executando = true;
 		while (executando) {
-			String[] op1 = { "Nova Tarefa", "Procurar Tarefa", "Apagar Tarefa", "Voltar ao menu" };
+			String[] op1 = { "Nova Tarefa", "Procurar Tarefa", "Apagar Tarefa", "Atualizar Tarefa", "Voltar ao menu" };
 			int escolha = JOptionPane.showOptionDialog(null, "Ações na área de tarefas", "Agenda :D",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, op1, op1[0]);
 
@@ -25,7 +28,8 @@ public class TarefaView {
 			case 0 -> adicionarTarefa();
 			case 1 -> listarTarefa();
 			case 2 -> excluirTarefa();
-			case 3, -1 -> executando = false;
+			case 3 -> atualizarTarefa();
+			case 4, -1 -> executando = false;
 			}
 		}
 	}
@@ -159,4 +163,68 @@ public class TarefaView {
 		}
 	}
 
+	private void atualizarTarefa() {
+	    String idStr = JOptionPane.showInputDialog("Digite o ID da tarefa que deseja atualizar:");
+	    if (idStr == null || idStr.trim().isEmpty()) {
+	        JOptionPane.showMessageDialog(null, "ID não pode ser vazio.");
+	        return;
+	    }
+
+	    String[] op2 = { "Nome", "Data", "Pessoa" };
+	    int escolha = JOptionPane.showOptionDialog(null, "Atualizar o campo:", "Buscar",
+	        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, op2, op2[0]);
+
+	    if (escolha == -1) return;
+
+	    String coluna;
+	    Object novoValorTratado;
+
+	    switch (escolha) {
+	        case 0 -> {
+	            coluna = "nomeTarefa";
+	            String valor = JOptionPane.showInputDialog("Digite o novo nome:");
+	            if (valor == null || valor.trim().isEmpty()) return;
+	            novoValorTratado = valor;
+	        }
+	        case 1 -> {
+	            coluna = "dataEntrega";
+	            String valor = JOptionPane.showInputDialog("Digite a nova data (AAAA-MM-DD):");
+	            if (valor == null || valor.trim().isEmpty()) return;
+	            try {
+	                LocalDate data = LocalDate.parse(valor);
+	                novoValorTratado = Date.valueOf(data);
+	            } catch (Exception e) {
+	                JOptionPane.showMessageDialog(null, "Data inválida!");
+	                return;
+	            }
+	        }
+	        case 2 -> {
+	            coluna = "Pessoa_idPessoa";
+	            String valor = JOptionPane.showInputDialog("Digite o novo ID da pessoa:");
+	            if (valor == null || valor.trim().isEmpty()) return;
+	            try {
+	                novoValorTratado = Integer.parseInt(valor);
+	            } catch (NumberFormatException e) {
+	                JOptionPane.showMessageDialog(null, "ID inválido!");
+	                return;
+	            }
+	        }
+	        default -> {
+	            JOptionPane.showMessageDialog(null, "Opção inválida.");
+	            return;
+	        }
+	    }
+
+	    try {
+	        int idTarefa = Integer.parseInt(idStr);
+	        boolean sucesso = tarefaController.atualizarTarefa(coluna, novoValorTratado, idTarefa);
+	        if (sucesso) {
+	            JOptionPane.showMessageDialog(null, "Tarefa atualizada com sucesso!");
+	        } else {
+	            JOptionPane.showMessageDialog(null, "Erro ao atualizar tarefa.");
+	        }
+	    } catch (NumberFormatException e) {
+	        JOptionPane.showMessageDialog(null, "ID da tarefa inválido!");
+	    }
+	}
 }

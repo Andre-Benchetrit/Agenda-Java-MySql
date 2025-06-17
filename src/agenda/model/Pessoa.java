@@ -2,26 +2,24 @@ package agenda.model;
 
 public class Pessoa {
 	private int idPessoa;
-	private String Nome;
-	private String Endereco;
-	private String Cidade;
+	private String nome;
+	private String endereco;
+	private String cidade;
 	private String CEP;
 
-	// Cadastro manual
 	public Pessoa(String nome, String endereco, String cidade, String CEP) {
-		this.Nome = nome;
-		this.Endereco = endereco;
-		this.Cidade = cidade;
+		this.nome = nome;
+		this.endereco = endereco;
+		this.cidade = cidade;
 		this.CEP = CEP;
 
 	}
 
-	// Para busca
 	public Pessoa(int idPessoa, String nome, String endereco, String cidade, String cep) {
 		this.idPessoa = idPessoa;
-		this.Nome = nome;
-		this.Endereco = endereco;
-		this.Cidade = cidade;
+		this.nome = nome;
+		this.endereco = endereco;
+		this.cidade = cidade;
 		this.CEP = cep;
 	}
 
@@ -38,27 +36,27 @@ public class Pessoa {
 	}
 
 	public String getNome() {
-		return Nome;
+		return nome;
 	}
 
 	public void setNome(String nome) {
-		Nome = nome;
+		this.nome = nome;
 	}
 
 	public String getEndereco() {
-		return Endereco;
+		return endereco;
 	}
 
 	public void setEndereco(String endereco) {
-		Endereco = endereco;
+		this.endereco = endereco;
 	}
 
 	public String getCidade() {
-		return Cidade;
+		return cidade;
 	}
 
 	public void setCidade(String cidade) {
-		Cidade = cidade;
+		this.cidade = cidade;
 	}
 
 	public String getCEP() {

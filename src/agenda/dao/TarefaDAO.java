@@ -16,7 +16,8 @@ public class TarefaDAO {
 
 		String sql = "INSERT INTO `tarefa` (`nomeTarefa`, `dataEntrega`, `Pessoa_idPessoa`)" + " VALUES (?, ?, ?)";
 
-		try (Connection conn = Conexao.createConnectionToMySQL(); PreparedStatement pstm = conn.prepareStatement(sql)) {
+		try (Connection conn = Conexao.createConnectionToMySQL(); 
+			PreparedStatement pstm = conn.prepareStatement(sql)) {
 
 			pstm.setString(1, tarefa.getNomeTarefa());
 
@@ -41,7 +42,8 @@ public class TarefaDAO {
 		String sql = "SELECT t.idTarefa, t.nomeTarefa, t.dataEntrega, p.idPessoa, p.Nome "
 				+ "FROM tarefa t JOIN pessoa p ON t.Pessoa_idPessoa = p.idPessoa " + "WHERE " + coluna + " LIKE ?";
 
-		try (Connection conn = Conexao.createConnectionToMySQL(); PreparedStatement pstm = conn.prepareStatement(sql)) {
+		try (Connection conn = Conexao.createConnectionToMySQL(); 
+			PreparedStatement pstm = conn.prepareStatement(sql)) {
 
 			pstm.setString(1, "%" + termo + "%");
 
@@ -74,16 +76,41 @@ public class TarefaDAO {
 
 		String sql = "DELETE FROM tarefa WHERE idTarefa = ?";
 
-		try (Connection conn = Conexao.createConnectionToMySQL(); PreparedStatement pstm = conn.prepareStatement(sql)) {
+		try (Connection conn = Conexao.createConnectionToMySQL(); 
+			PreparedStatement pstm = conn.prepareStatement(sql)) {
 
 			pstm.setInt(1, termo);
-			int rowsAffected = pstm.executeUpdate(); // Cria uma variavel para capturar com o pstm quantas linhas
-														// mudaram.
-			return rowsAffected > 0; // Retorna true se conseguir apagar (se linhas foram mudadas).
+			int rowsAffected = pstm.executeUpdate();
+														
+			return rowsAffected > 0; 
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false; // Se não conseguir apagar, retorna falso
+			return false; 
 		}
+	}
+	
+	public boolean atualizar(String coluna, Object valor, int idTarefa) {
+	    String sql = "UPDATE tarefa SET " + coluna + " = ? WHERE idTarefa = ?";
+	    try (Connection conn = Conexao.createConnectionToMySQL();
+	         PreparedStatement pstm = conn.prepareStatement(sql)) {
+
+	        if (valor instanceof String) {
+	            pstm.setString(1, (String) valor);
+	        } else if (valor instanceof java.sql.Date) {
+	            pstm.setDate(1, (java.sql.Date) valor);
+	        } else if (valor instanceof Integer) {
+	            pstm.setInt(1, (Integer) valor);
+	        } else {
+	            throw new IllegalArgumentException("Tipo de valor não suportado.");
+	        }
+
+	        pstm.setInt(2, idTarefa);
+
+	        return pstm.executeUpdate() > 0;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
 
 }

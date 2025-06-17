@@ -27,4 +27,8 @@ public class TarefaController {
 	public List<Pessoa> buscarNome(String campo, String valor) {
 		return pessoaDAO.buscar(campo, valor);
 	}
+	
+	public boolean atualizarTarefa(String coluna, Object valor, int idTarefa) {
+	    return tarefaDAO.atualizar(coluna, valor, idTarefa);
+	}
 }

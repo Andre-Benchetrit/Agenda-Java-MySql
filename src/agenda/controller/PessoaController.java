@@ -21,4 +21,8 @@ public class PessoaController {
 	public boolean apagarPessoa(int id) {
 		return dao.apagar(id);
 	}
+	
+	public boolean atualizarPessoa(String coluna, String valor, int idPessoa) {
+	    return dao.atualizar(coluna, valor, idPessoa);
+	}
 }

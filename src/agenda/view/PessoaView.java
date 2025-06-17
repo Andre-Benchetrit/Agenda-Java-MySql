@@ -12,7 +12,7 @@ public class PessoaView {
 	public void menu() {
 		boolean executando = true;
 		while (executando) {
-			String[] op1 = { "Novo Contato", "Procurar Contato", "Apagar Contato", "Voltar ao menu" };
+			String[] op1 = { "Novo Contato", "Procurar Contato", "Apagar Contato", "Atualizar Contato", "Voltar ao menu" };
 			int escolha = JOptionPane.showOptionDialog(null, "Ações na área de pessoas", "Agenda :D",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, op1, op1[0]);
 
@@ -20,7 +20,8 @@ public class PessoaView {
 			case 0 -> adicionarContato();
 			case 1 -> buscarContato();
 			case 2 -> apagarContato();
-			case 3, -1 -> executando = false;
+			case 3 -> atualizarContato();
+			case 4, -1 -> executando = false;
 			}
 		}
 	}
@@ -48,9 +49,9 @@ public class PessoaView {
 		if (escolha == -1)
 			return;
 		String coluna = switch (escolha) {
-		case 0 -> "Nome";
-		case 1 -> "Endereco";
-		case 2 -> "Cidade";
+		case 0 -> "nome";
+		case 1 -> "endereco";
+		case 2 -> "cidade";
 		default -> null;
 		};
 		if (coluna == null)
@@ -76,12 +77,14 @@ public class PessoaView {
 	}
 
 	private void apagarContato() {
-		String valor = JOptionPane.showInputDialog(null, "Digite o ID do contato que deseja apagar:");
-		if (valor == null)
+		String idStr = JOptionPane.showInputDialog("Digite o ID da pessoa que deseja excluir:");
+		if (idStr == null || idStr.trim().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "ID não pode ser vazio.");
 			return;
+		}
 
 		try {
-			int id = Integer.parseInt(valor);
+			int id = Integer.parseInt(idStr);
 			boolean sucesso = controller.apagarPessoa(id);
 			if (sucesso) {
 				JOptionPane.showMessageDialog(null, "Contato apagado com sucesso!");
@@ -92,4 +95,72 @@ public class PessoaView {
 			JOptionPane.showMessageDialog(null, "Por favor, insira um número válido.");
 		}
 	}
-}
+	
+	private void atualizarContato() {
+	    String idStr = JOptionPane.showInputDialog("Digite o ID do contato que deseja atualizar:");
+	    if (idStr == null || idStr.trim().isEmpty()) {
+	        JOptionPane.showMessageDialog(null, "ID não pode ser vazio.");
+	        return;
+	    }
+
+	    String[] op2 = { "Nome", "Endereco", "Cidade", "CEP" };
+	    int escolha = JOptionPane.showOptionDialog(null, "Atualizar o campo:", "Buscar",
+	        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, op2, op2[0]);
+
+	    if (escolha == -1) return;
+
+	    String coluna;
+	    String valor;
+
+	    switch (escolha) {
+	        case 0 -> {
+	            coluna = "nome";
+	            valor = JOptionPane.showInputDialog("Digite o novo nome:");
+	            if (valor == null || valor.trim().isEmpty()) {
+	            	JOptionPane.showMessageDialog(null, "O campo não pode ser vazio."); 
+	            	return;
+	            }
+	        }
+	        case 1 -> {
+	            coluna = "endereco";
+	            valor = JOptionPane.showInputDialog("Digite o novo endereco:");
+	            if (valor == null || valor.trim().isEmpty()) {
+	            	JOptionPane.showMessageDialog(null, "O campo não pode ser vazio."); 
+	            	return;
+	            }
+	        }
+	        case 2 -> {
+	            coluna = "cidade";
+	            valor = JOptionPane.showInputDialog("Digite a nova cidade:");
+	            if (valor == null || valor.trim().isEmpty()) {
+	            	JOptionPane.showMessageDialog(null, "O campo não pode ser vazio."); 
+	            	return;
+	            }
+	        }
+	        case 3 -> {
+	            coluna = "CEP";
+	            valor = JOptionPane.showInputDialog("Digite o novo CEP:");
+	            if (valor == null || valor.trim().isEmpty()) {
+	            	JOptionPane.showMessageDialog(null, "O campo não pode ser vazio."); 
+	            	return;
+	            }
+	        }
+	        default -> {
+	            JOptionPane.showMessageDialog(null, "Opção inválida.");
+	            return;
+	        }
+	    }
+	        
+	        try {
+		        int idPessoa = Integer.parseInt(idStr);
+		        boolean sucesso = controller.atualizarPessoa(coluna, valor, idPessoa);
+		        if (sucesso) {
+		            JOptionPane.showMessageDialog(null, "Tarefa atualizada com sucesso!");
+		        } else {
+		            JOptionPane.showMessageDialog(null, "Erro ao atualizar tarefa.");
+		        }
+		    } catch (NumberFormatException e) {
+		        JOptionPane.showMessageDialog(null, "ID da pessoa inválido!");
+		    }
+	    }
+	}

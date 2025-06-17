@@ -13,13 +13,11 @@ public class PessoaDAO {
 
 	public boolean salvar(Pessoa pessoa) {
 
-		/*
-		 * Isso é um sql comum, onde os ? são os paramentros na base de dados
-		 */
 
 		String sql = "INSERT INTO `pessoa`(`Nome`, `Endereco`, `Cidade`, `CEP`)" + " VALUES (?, ?, ?, ?)";
 
-		try (Connection conn = Conexao.createConnectionToMySQL(); PreparedStatement pstm = conn.prepareStatement(sql)) {
+		try (Connection conn = Conexao.createConnectionToMySQL(); 
+			PreparedStatement pstm = conn.prepareStatement(sql)) {
 
 			pstm.setString(1, pessoa.getNome());
 			pstm.setString(2, pessoa.getEndereco());
@@ -39,7 +37,8 @@ public class PessoaDAO {
 
 		String sql = "SELECT * FROM pessoa WHERE " + coluna + " LIKE ?";
 
-		try (Connection conn = Conexao.createConnectionToMySQL(); PreparedStatement pstm = conn.prepareStatement(sql)) {
+		try (Connection conn = Conexao.createConnectionToMySQL();
+			PreparedStatement pstm = conn.prepareStatement(sql)) {
 
 			pstm.setString(1, "%" + termo + "%");
 
@@ -67,15 +66,31 @@ public class PessoaDAO {
 
 		String sql = "DELETE FROM pessoa WHERE idPessoa = ?";
 
-		try (Connection conn = Conexao.createConnectionToMySQL(); PreparedStatement pstm = conn.prepareStatement(sql)) {
+		try (Connection conn = Conexao.createConnectionToMySQL(); 
+			PreparedStatement pstm = conn.prepareStatement(sql)) {
 
 			pstm.setInt(1, termo);
-			int rowsAffected = pstm.executeUpdate(); // Cria uma variavel para capturar com o pstm quantas linhas
-														// mudaram.
-			return rowsAffected > 0; // Retorna true se conseguir apagar (se linhas foram mudadas).
+			int rowsAffected = pstm.executeUpdate();
+														
+			return rowsAffected > 0; 
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false; // Se não conseguir apagar, retorna falso
+			return false; 
 		}
+	}
+	
+	public boolean atualizar(String coluna, String valor, int idPessoa) {
+	    String sql = "UPDATE pessoa SET " + coluna + " = ? WHERE idPessoa = ?";
+	    try (Connection conn = Conexao.createConnectionToMySQL();
+	         PreparedStatement pstm = conn.prepareStatement(sql)) {
+
+	        pstm.setString(1, valor);
+	        pstm.setInt(2, idPessoa);
+
+	        return pstm.executeUpdate() > 0;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
 }
