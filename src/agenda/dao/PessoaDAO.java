@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import agenda.model.Pessoa;
 
 public class PessoaDAO {
@@ -62,7 +64,7 @@ public class PessoaDAO {
 		return lista;
 	}
 
-	public boolean apagar(int termo) {
+	public boolean apagar(int termo) throws Exception {
 
 		String sql = "DELETE FROM pessoa WHERE idPessoa = ?";
 
@@ -73,9 +75,6 @@ public class PessoaDAO {
 			int rowsAffected = pstm.executeUpdate();
 														
 			return rowsAffected > 0; 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false; 
 		}
 	}
 	
@@ -89,7 +88,7 @@ public class PessoaDAO {
 
 	        return pstm.executeUpdate() > 0;
 	    } catch (Exception e) {
-	        e.printStackTrace();
+	    	e.printStackTrace();
 	        return false;
 	    }
 	}

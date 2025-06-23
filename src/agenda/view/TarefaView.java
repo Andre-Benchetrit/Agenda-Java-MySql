@@ -36,12 +36,13 @@ public class TarefaView {
 
 	private void adicionarTarefa() {
 		String nomeTarefa = JOptionPane.showInputDialog("Qual é a nova tarefa?");
-		if (nomeTarefa == null || nomeTarefa.trim().isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Nome da tarefa não pode ser vazio.");
+		if (nomeTarefa == null)
 			return;
+		else if (nomeTarefa.trim().isEmpty()) {
+	        JOptionPane.showMessageDialog(null, "Nome da tarefa não pode ser vazio.");
+	        return;
 		}
 
-		// Data
 		LocalDate dataEntrega;
 		String input = JOptionPane.showInputDialog("Para quando a nova tarefa deverá ser feita? (Formato yyyy-MM-dd)");
 		try {
@@ -51,7 +52,6 @@ public class TarefaView {
 			return;
 		}
 
-		// Pessoa
 		Pessoa pessoaEscolhida;
 		String nomePessoa = JOptionPane.showInputDialog("Digite o nome do encarregado da tarefa:");
 		List<Pessoa> pessoas = pessoaController.buscarPessoa("Nome", nomePessoa);
@@ -83,7 +83,6 @@ public class TarefaView {
 			}
 		}
 
-		// Cria a tarefa e envia pro controller
 		Tarefa tarefa = new Tarefa(nomeTarefa, dataEntrega, pessoaEscolhida);
 
 		boolean sucesso = tarefaController.adicionarTarefa(tarefa);
@@ -116,16 +115,18 @@ public class TarefaView {
 			termo = JOptionPane.showInputDialog("Digite a data de entrega (yyyy-mm-dd):");
 			break;
 		case 2:
-			campo = "p.Nome"; // Precisa ser alias da tabela pessoa no SQL do DAO
+			campo = "p.Nome";
 			termo = JOptionPane.showInputDialog("Digite o nome do encarregado:");
 			break;
 		default:
 			return;
 		}
 
-		if (termo == null || termo.trim().isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Termo de busca não pode ser vazio.");
+		if (termo == null)
 			return;
+		else if (termo.trim().isEmpty()) {
+	        JOptionPane.showMessageDialog(null, "Termo de busca não pode ser vazio.");
+	        return;
 		}
 
 		List<Tarefa> tarefas = tarefaController.buscarTarefa(campo, termo);
@@ -145,12 +146,25 @@ public class TarefaView {
 
 	private void excluirTarefa() {
 		String idStr = JOptionPane.showInputDialog("Digite o ID da tarefa que deseja excluir:");
-		if (idStr == null || idStr.trim().isEmpty()) {
-			JOptionPane.showMessageDialog(null, "ID não pode ser vazio.");
+		if (idStr == null)
 			return;
+		else if (idStr.trim().isEmpty()) {
+	        JOptionPane.showMessageDialog(null, "O ID não pode ser vazio.");
+	        return;
 		}
 
 		try {
+			String confirmacao = JOptionPane.showInputDialog("Tem certeza que deseja apagar a tarefa? Digite SIM para confirmar.");
+
+	    	if (confirmacao == null){
+    	    	JOptionPane.showMessageDialog(null, "Ação cancelada pelo usuário.");
+    	    	return;
+    	    }
+	    	else if (!confirmacao.trim().toLowerCase().equals("sim")) {
+	    	    JOptionPane.showMessageDialog(null, "É necessário confirmação com SIM para prosseguir.");
+	    	    return;
+	    	}
+	    	
 			int idTarefa = Integer.parseInt(idStr);
 			boolean sucesso = tarefaController.apagarTarefa(idTarefa);
 			if (sucesso) {
@@ -165,8 +179,10 @@ public class TarefaView {
 
 	private void atualizarTarefa() {
 	    String idStr = JOptionPane.showInputDialog("Digite o ID da tarefa que deseja atualizar:");
-	    if (idStr == null || idStr.trim().isEmpty()) {
-	        JOptionPane.showMessageDialog(null, "ID não pode ser vazio.");
+	    if (idStr == null)
+			return;
+		else if (idStr.trim().isEmpty()) {
+	        JOptionPane.showMessageDialog(null, "ID da tarefa não pode ser vazio.");
 	        return;
 	    }
 
@@ -216,12 +232,24 @@ public class TarefaView {
 	    }
 
 	    try {
+	    	
+	    	String confirmacao = JOptionPane.showInputDialog("Tem certeza que deseja alterar a tarefa? Digite SIM para confirmar.");
+
+	    	if (confirmacao == null){
+    	    	JOptionPane.showMessageDialog(null, "Ação cancelada pelo usuário.");
+    	    	return;
+    	    }
+	    	else if (!confirmacao.trim().toLowerCase().equals("sim")) {
+	    	    JOptionPane.showMessageDialog(null, "É necessário confirmação com SIM para prosseguir.");
+	    	    return;
+	    	}
+	    	
 	        int idTarefa = Integer.parseInt(idStr);
 	        boolean sucesso = tarefaController.atualizarTarefa(coluna, novoValorTratado, idTarefa);
 	        if (sucesso) {
 	            JOptionPane.showMessageDialog(null, "Tarefa atualizada com sucesso!");
 	        } else {
-	            JOptionPane.showMessageDialog(null, "Erro ao atualizar tarefa.");
+	            JOptionPane.showMessageDialog(null, "Tarefa não encontrada.");
 	        }
 	    } catch (NumberFormatException e) {
 	        JOptionPane.showMessageDialog(null, "ID da tarefa inválido!");

@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class Conexao {
-	// Nome do usuário do MYSQL
 	private static final String USERNAME = "root";
 
 	// Senha do MYSQL
@@ -23,9 +22,8 @@ public class Conexao {
 	 * @throws Exception
 	 */
 	public static Connection createConnectionToMySQL() throws Exception {
-		Class.forName("com.mysql.jdbc.Driver"); // Faz com que a classe seja carregada pela JVM
+		Class.forName("com.mysql.jdbc.Driver");
 
-		// Cria NOSSA conexão com o banco de dados
 		Connection connection = DriverManager.getConnection(DATABESE_URL, USERNAME, PASSWORD);
 
 		return connection;

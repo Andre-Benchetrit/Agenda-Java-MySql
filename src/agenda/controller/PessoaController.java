@@ -2,6 +2,7 @@ package agenda.controller;
 
 import agenda.dao.PessoaDAO;
 import agenda.model.Pessoa;
+import agenda.view.FishDialog;
 
 import java.util.List;
 
@@ -18,11 +19,14 @@ public class PessoaController {
 		return dao.buscar(campo, valor);
 	}
 
-	public boolean apagarPessoa(int id) {
+	public boolean apagarPessoa(int id) throws Exception {
 		return dao.apagar(id);
 	}
 	
 	public boolean atualizarPessoa(String coluna, String valor, int idPessoa) {
 	    return dao.atualizar(coluna, valor, idPessoa);
+	}
+	public void easterEgg() {
+		FishDialog.GETFISHED();
 	}
 }
